@@ -1,5 +1,3 @@
-// script.js file
-
 function domReady(fn) {
   if (
     document.readyState === "complete" ||
@@ -12,14 +10,26 @@ function domReady(fn) {
 }
 
 domReady(function () {
-  // If found you qr code
-  function onScanSuccess(decodeText, decodeResult) {
-    alert("You Qr is : " + decodeText, decodeResult);
+  function onScanSuccess(decodedText, decodedResult) {
+    alert("Your QR code is: " + decodedText);
+    console.log(decodedResult);
   }
 
-  let htmlscanner = new Html5QrcodeScanner("my-qr-reader", {
-    fps: 10,
-    qrbos: 250,
-  });
-  htmlscanner.render(onScanSuccess);
+  function onScanError(errorMessage) {
+    console.error("Error scanning QR Code: " + errorMessage);
+  }
+
+  const html5QrcodeScanner = new Html5QrcodeScanner(
+    "my-qr-reader",
+    {
+      fps: 10,
+      qrbox: { width: 250, height: 250 },
+      rememberLastUsedCamera: true,
+      // Additional options for better mobile compatibility
+      supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+    },
+    false // verbose output
+  );
+
+  html5QrcodeScanner.render(onScanSuccess, onScanError);
 });
